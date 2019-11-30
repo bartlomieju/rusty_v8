@@ -68,6 +68,7 @@ mod tests {
   use crate::isolate::*;
   use crate::platform::*;
   use crate::v8::*;
+  use crate::Local;
   use crate::Locker;
 
   #[test]
@@ -78,8 +79,21 @@ mod tests {
     params.set_array_buffer_allocator(Allocator::new_default_allocator());
     let isolate = Isolate::new(params);
     let mut locker = Locker::new(&isolate);
+
+    let mut dummy = 123usize;
+    let dummy_ptr: *mut usize = &mut dummy;
+
+    let mut l: Local<'_, usize>;
+
     HandleScope::new(&mut locker).enter(|scope| {
-      HandleScope::new(scope).enter(|_scope| {});
+      let mut local = Local::from_raw(scope, dummy_ptr).unwrap();
+      HandleScope::new(scope).enter(|_scope| {
+        let l = &mut local;
+      });
+      let local2 = Local::from_raw(scope, dummy_ptr).unwrap();
+      drop(local);
+      drop(local2);
+      //l = local;
     });
   }
 }

@@ -13,6 +13,7 @@ pub mod array_buffer;
 pub mod handle_scope;
 pub mod inspector;
 pub mod isolate;
+pub mod local;
 pub mod locker;
 pub mod platform;
 pub mod string_buffer;
@@ -20,7 +21,9 @@ pub mod string_view;
 pub mod support;
 pub mod v8;
 
+pub use handle_scope::HandleScope;
 pub use isolate::Isolate;
+pub use local::Local;
 pub use locker::Locker;
 pub use string_buffer::StringBuffer;
 pub use string_view::StringView;
